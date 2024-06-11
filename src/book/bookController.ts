@@ -109,7 +109,12 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
       );
 
       coverImageUrl = coverImageUpload.secure_url;
+
       await fs.promises.unlink(coverImagePath);
+
+      const oldCoverImageId =
+        "book-covers/" + book.coverImage.split("/").at(-1)?.split(".").at(-2);
+      await cloudinary.uploader.destroy(oldCoverImageId);
     }
 
     if (files?.file) {
@@ -130,6 +135,9 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
 
       bookFileUrl = bookFileUpload.secure_url;
       await fs.promises.unlink(bookFilePath);
+
+      const oldBookFileId = "book-covers/" + book.file.split("/").at(-1);
+      await cloudinary.uploader.destroy(oldBookFileId);
     }
 
     try {
